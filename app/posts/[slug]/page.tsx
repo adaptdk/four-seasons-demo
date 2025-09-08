@@ -8,6 +8,7 @@ import CoverImage from "../../cover-image";
 
 import { Markdown } from "@/lib/markdown";
 import { getAllPosts, getPostPage } from "@/lib/api";
+import { BlockRenderer } from "@/app/block-renderer";
 
 export async function generateStaticParams() {
   const allPosts = await getAllPosts();
@@ -24,7 +25,8 @@ export default async function PostPage({
 }) {
   const post = await getPostPage(params.slug);
 
-  const { title, content, publishDate, summary, img } = post.fields;
+  const { title, content, publishDate, summary, img, blocksAfter } =
+    post.fields;
 
   const imgUrl = `https:${img.fields.file.url}`;
 
@@ -70,6 +72,7 @@ export default async function PostPage({
         </div>
       </article>
       <hr className="border-accent-2 mt-28 mb-24" />
+      {blocksAfter?.at(0) && <BlockRenderer blocks={blocksAfter} />}
     </div>
   );
 }
