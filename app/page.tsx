@@ -47,6 +47,8 @@ function HeroPost({
   title: string;
   publishDate: string;
   slug: string;
+  img: any;
+  summary: any;
 }) {
   const imgUrl = `http:${img.fields.file.url}`;
   return (
@@ -82,6 +84,7 @@ export default async function Page() {
   return (
     <div className="container mx-auto px-5">
       <Intro />
+      {/* @ts-ignore */}
       {heroPost && <HeroPost {...heroPost.fields} />}
       <MoreStories morePosts={morePosts} />
     </div>

@@ -19,3 +19,14 @@ export async function getAllPosts() {
 
   return entries?.items;
 }
+
+export async function getRelatedPosts(slug: string) {
+  const entries = await client().getEntries({
+    content_type: "postPage",
+    "fields.slug[nin]": slug,
+    include: 5,
+    limit: 2,
+  });
+
+  return entries?.items;
+}

@@ -1,6 +1,20 @@
 import { Markdown } from "@/lib/markdown";
 
-export const CTA = ({ heading, subheading, content, link, footnote }) => {
+interface Props {
+  heading: string;
+  subheading: string;
+  content: any;
+  link: any;
+  footnote: string;
+}
+
+export const CTA = ({
+  heading,
+  subheading,
+  content,
+  link,
+  footnote,
+}: Props) => {
   return (
     <section className="mx-auto my-8 bg-gray-100 rounded px-8 py-20 max-w-5xl flex gap-4 flex-col items-center">
       <div className="text-center">

@@ -1,13 +1,11 @@
 import Link from "next/link";
-import { draftMode } from "next/headers";
 
 import MoreStories from "../../more-stories";
-import Avatar from "../../avatar";
 import Date from "../../date";
 import CoverImage from "../../cover-image";
 
 import { Markdown } from "@/lib/markdown";
-import { getAllPosts, getPostPage } from "@/lib/api";
+import { getAllPosts, getPostPage, getRelatedPosts } from "@/lib/api";
 import { BlockRenderer } from "@/app/block-renderer";
 
 export async function generateStaticParams() {
@@ -18,12 +16,10 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function PostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = await getPostPage(params.slug);
+export default async function PostPage({ params }: { params: any }) {
+  const { slug } = await params;
+  const post = await getPostPage(slug);
+  const relatedPosts = await getRelatedPosts(slug);
 
   const { title, content, publishDate, summary, img, blocksAfter } =
     post.fields;
@@ -73,6 +69,7 @@ export default async function PostPage({
       </article>
       <hr className="border-accent-2 mt-28 mb-24" />
       {blocksAfter?.at(0) && <BlockRenderer blocks={blocksAfter} />}
+      <MoreStories morePosts={relatedPosts} />
     </div>
   );
 }

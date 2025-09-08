@@ -14,6 +14,8 @@ function PostPreview({
   title: string;
   publishDate: string;
   slug: string;
+  img: any;
+  summary: any;
 }) {
   const imgUrl = `http:${img?.fields.file.url}`;
   return (
