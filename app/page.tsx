@@ -50,7 +50,7 @@ function HeroPost({
   img: any;
   summary: any;
 }) {
-  const imgUrl = `http:${img.fields.file.url}`;
+  const imgUrl = `https:${img.fields.file.url}`;
   return (
     <section>
       <div className="mb-8 md:mb-16">

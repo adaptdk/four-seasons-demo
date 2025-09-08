@@ -17,7 +17,7 @@ function PostPreview({
   img: any;
   summary: any;
 }) {
-  const imgUrl = `http:${img?.fields.file.url}`;
+  const imgUrl = `https:${img?.fields.file.url}`;
   return (
     <div>
       <div className="mb-5">
