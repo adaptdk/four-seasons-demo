@@ -4,6 +4,11 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
   images: {
-    loader: "custom",
+    remotePatterns: [
+      {
+        hostname: `images.ctfassets.net`,
+        protocol: `https`,
+      },
+    ],
   },
 };
