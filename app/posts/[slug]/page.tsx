@@ -7,13 +7,13 @@ import Date from "../../date";
 import CoverImage from "../../cover-image";
 
 import { Markdown } from "@/lib/markdown";
-import { getAllPosts, getPostAndMorePosts } from "@/lib/api";
+import { getAllPosts, getPostPage } from "@/lib/api";
 
 export async function generateStaticParams() {
-  const allPosts = await getAllPosts(false);
+  const allPosts = await getAllPosts();
 
   return allPosts.map((post) => ({
-    slug: post.slug,
+    slug: post.fields.slug,
   }));
 }
 
@@ -22,8 +22,11 @@ export default async function PostPage({
 }: {
   params: { slug: string };
 }) {
-  const { isEnabled } = draftMode();
-  const { post, morePosts } = await getPostAndMorePosts(params.slug, isEnabled);
+  const post = await getPostPage(params.slug);
+
+  const { title, content, publishDate, summary, img } = post.fields;
+
+  const imgUrl = `https:${img.fields.file.url}`;
 
   return (
     <div className="container mx-auto px-5">
@@ -35,35 +38,38 @@ export default async function PostPage({
       </h2>
       <article>
         <h1 className="mb-12 text-center text-6xl font-bold leading-tight tracking-tighter md:text-left md:text-7xl md:leading-none lg:text-8xl">
-          {post.title}
+          {title}
         </h1>
-        <div className="hidden md:mb-12 md:block">
+        {/* <div className="hidden md:mb-12 md:block">
           {post.author && (
             <Avatar name={post.author.name} picture={post.author.picture} />
           )}
-        </div>
+        </div> */}
         <div className="mb-8 sm:mx-0 md:mb-16">
-          <CoverImage title={post.title} url={post.coverImage.url} />
+          <CoverImage title={title} url={imgUrl} />
         </div>
         <div className="mx-auto max-w-2xl">
-          <div className="mb-6 block md:hidden">
+          {/* <div className="mb-6 block md:hidden">
             {post.author && (
               <Avatar name={post.author.name} picture={post.author.picture} />
             )}
-          </div>
+          </div> */}
           <div className="mb-6 text-lg">
-            <Date dateString={post.date} />
+            <Date dateString={publishDate} />
           </div>
         </div>
 
         <div className="mx-auto max-w-2xl">
+          <div className="rounded bg-gray-100 p-4 mb-6">
+            <Markdown content={summary} />
+          </div>
+
           <div className="prose">
-            <Markdown content={post.content} />
+            <Markdown content={content} />
           </div>
         </div>
       </article>
       <hr className="border-accent-2 mt-28 mb-24" />
-      <MoreStories morePosts={morePosts} />
     </div>
   );
 }

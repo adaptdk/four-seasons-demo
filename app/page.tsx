@@ -8,6 +8,7 @@ import MoreStories from "./more-stories";
 
 import { getAllPosts } from "@/lib/api";
 import { CMS_NAME, CMS_URL } from "@/lib/constants";
+import { Markdown } from "@/lib/markdown";
 
 function Intro() {
   return (
@@ -38,23 +39,20 @@ function Intro() {
 
 function HeroPost({
   title,
-  coverImage,
-  date,
-  excerpt,
-  author,
+  publishDate,
   slug,
+  img,
+  summary,
 }: {
   title: string;
-  coverImage: any;
-  date: string;
-  excerpt: string;
-  author: any;
+  publishDate: string;
   slug: string;
 }) {
+  const imgUrl = `http:${img.fields.file.url}`;
   return (
     <section>
       <div className="mb-8 md:mb-16">
-        <CoverImage title={title} slug={slug} url={coverImage.url} />
+        <CoverImage title={title} slug={slug} url={imgUrl} />
       </div>
       <div className="md:grid md:grid-cols-2 md:gap-x-16 lg:gap-x-8 mb-20 md:mb-28">
         <div>
@@ -64,12 +62,12 @@ function HeroPost({
             </Link>
           </h3>
           <div className="mb-4 md:mb-0 text-lg">
-            <Date dateString={date} />
+            <Date dateString={publishDate} />
           </div>
         </div>
-        <div>
-          <p className="text-lg leading-relaxed mb-4">{excerpt}</p>
-          {author && <Avatar name={author.name} picture={author.picture} />}
+        <div className="text-lg leading-relaxed mb-4">
+          <Markdown content={summary} />
+          {/* {author && <Avatar name={author.name} picture={author.picture} />} */}
         </div>
       </div>
     </section>
@@ -77,24 +75,14 @@ function HeroPost({
 }
 
 export default async function Page() {
-  const { isEnabled } = draftMode();
-  const allPosts = await getAllPosts(isEnabled);
+  const allPosts = await getAllPosts();
   const heroPost = allPosts[0];
   const morePosts = allPosts.slice(1);
 
   return (
     <div className="container mx-auto px-5">
       <Intro />
-      {heroPost && (
-        <HeroPost
-          title={heroPost.title}
-          coverImage={heroPost.coverImage}
-          date={heroPost.date}
-          author={heroPost.author}
-          slug={heroPost.slug}
-          excerpt={heroPost.excerpt}
-        />
-      )}
+      {heroPost && <HeroPost {...heroPost.fields} />}
       <MoreStories morePosts={morePosts} />
     </div>
   );
